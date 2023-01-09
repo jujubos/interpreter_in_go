@@ -4,6 +4,7 @@
 |TestParsingPrefixExpressions|
 start
 :输入测试用例;
+label data_available
 
 |lexer|
 :New;
@@ -14,9 +15,11 @@ start
 
 |ParseProgram|
 :program := &ast.Program{};
+
 repeat :check token type;
 if (curToken.type) is (EOF) then
 :ignore;
+
 :return program;
 |TestParsingPrefixExpressions|
 group checkParserErrors()
@@ -26,6 +29,7 @@ group checkParserErrors()
   :printf errors;
   endif
 end group
+
 group 检查解析结果
 if (len(program.Statements != 1)) then(yes)
 :printf error;
@@ -53,7 +57,7 @@ else
 :do nothing;
 endif
 end group
-
+goto data_available
 stop
 else (!=EOF)
 |parser|
