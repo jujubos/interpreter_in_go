@@ -1,0 +1,87 @@
+@startuml
+interface Node
+interface Statement
+interface Expression
+class Program {
+    Statements []Statement
+}
+class LetStatement {
+	Token   :Token
+	Name    :*Identifier
+	Value   :Expression
+}
+class ReturnStatement {
+	Token        :Token
+	ReturnValue  :Expression
+}
+class ExpressionStatement {
+	Token       :Token
+	Expression  :Expression
+}
+class Identifier {
+	Token Token
+	Value string
+}
+class IntegerLiteral {
+	Token Token
+	Value int64
+}
+class PrefixExpression {
+	Token Token
+	Operator string
+	Right Expression
+}
+class InfixExpression {
+	Token       :Token
+	Left        :Expression
+	Operator    :string
+	Right       :Expression
+}
+class Boolean {
+	Token Token
+	Value bool
+}
+class IfExpression {
+	Token       :token.Token
+	Condition   :Expression
+	Consequence :*BlockStatement
+	Alternative :*BlockStatement
+}
+class BlockStatement {
+	Token      :Token
+	Statements :[]Statement
+}
+class FunctionLiteral {
+	Token      :Token
+	Parameters :[]*Identifier
+	Body       :*BlockStatement
+}
+class CallExpression {
+	Token     :token.Token // '('词法单元
+	Function  :Expression  // 标识符或函数字面量
+	Arguments :[]Expression
+}
+class Token
+class Lexer
+class Parser
+
+Statement            --|>  Node
+Expression           --|>  Node
+Program              ..|>  Node
+LetStatement         ..|>  Statement
+ReturnStatement      ..|>  Statement
+ExpressionStatement  ..|>  Statement
+Identifier           ..|>  Expression
+IntegerLiteral       ..|>  Expression
+PrefixExpression     ..|>  Expression
+InfixExpression      ..|>  Expression
+Boolean              ..|>  Expression
+IfExpression         ..|>  Expressoin
+BlockStatement       ..|>  Expression
+FunctionLiteral      ..|>  Expression
+CallExpression       ..|>  Expression
+
+ExpressionStatement  *--   Expression
+Program              *--   Statement
+
+@enduml
