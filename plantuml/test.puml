@@ -1,0 +1,87 @@
+@startuml
+|lexer|
+
+|TestParsingPrefixExpressions|
+start
+:输入测试用例;
+label data_available
+
+|lexer|
+:New;
+
+|parser|
+:New;
+:ParseProgram;
+
+|ParseProgram|
+:program := &ast.Program{};
+
+repeat :check token type;
+if (curToken.type) is (EOF) then
+:ignore;
+
+:return program;
+|TestParsingPrefixExpressions|
+group checkParserErrors()
+  if (len(program.errors) == 0) then(yes)
+  :return;
+  else(> 0)
+  :printf errors;
+  endif
+end group
+
+group 检查解析结果
+if (len(program.Statements != 1)) then(yes)
+:printf error;
+else
+:do nothing;
+endif
+if (是否为表达式语句) then(no)
+:printf error;
+else
+:do nothing;
+endif
+if (是否为前缀表达式) then(no)
+:printf error;
+else
+:do nothing;
+endif
+if (操作符解析是否正确) then(no)
+:printf error;
+else 
+:do nothing;
+endif
+if (操作数解析是否正确) then(no)
+:printf error;
+else
+:do nothing;
+endif
+end group
+goto data_available
+stop
+else (!=EOF)
+|parser|
+:parseStatement;
+endif
+
+|parseStatement|
+switch (token.Type)
+case ( LET )
+  :parseLetStatement;
+case ( DEFAULT )
+  :parseExpressionStatement;
+case ( RETURN ) 
+  :parseReturnStatement;
+endswitch
+
+|ParseProgram|
+-> 返回Statement;
+if (是否为空) then(no) 
+:append(program.Statements, stmt);
+else (yes)
+:ignore;
+endif
+:nextToken;
+repeat while()
+@enduml
+

@@ -1,0 +1,70 @@
+@startuml
+|parseExpression|
+start
+-> 传入precedence: ** LOWEST **;
+:输入:"1 + 2 + 3;";
+note left
+    解析器的状态:
+    p.curToken == "1"
+    p.peekToken == "+"
+    函数运行的状态：
+    precedence: ** LOWEST **
+end note
+if(是否有当前token对应的前缀解析器?) then(no)
+:return nil;
+stop;
+else(<color:red>yes: parseIdentifier)
+:执行parseIdentifier，得到leftExp;
+note right
+    当前解析器的状态:
+    p.curToken == "1"
+    p.peekToken == "+"
+    函数运行的状态:
+    precedence: **LOWEST**
+    leftExp: "1"
+end note
+endif
+while( <下一个token不是";"> 且 <传入的优先级小于下一个token的优先级> ) is (<color:red>true)
+if(存在下一个token对应的中缀表达式解析函数) then(no)
+:return leftExp;
+stop
+else(<color:red>yes: parseInfixExpression)
+:前移token指针;
+note right
+    当前解析器的状态:
+    p.curToken == "+"
+    p.peekToken == "2"
+    函数运行的状态:
+    precedence: **LOWEST**
+    leftExp: "1"
+end note
+:调用parseInfixExpression;
+
+|parseInfixExpression|
+-> 传入leftExp;
+:接收参数: left;
+:初始化中缀表达式:expression;
+:expression.Token = p.curToken;
+:expression.Operator = p.curToken.Literal;
+:expression.Left = left;
+:暂存当前token的优先级precedence;
+note right: precedence = **SUM**
+:前移token指针;
+note right
+    当前解析器的状态:
+    p.curToken == "2"
+    p.peekToken == "+"
+    函数运行的状态:
+    precedence: **SUM**
+end note
+:调用parseExpression(precedence);
+
+|parseExpression|
+
+
+endif
+endwhile(false)
+:return leftExp;
+stop;
+
+@enduml
